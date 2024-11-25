@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# Sport Event Manager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+La **Sport Event Manager** est une application interactive conçue pour aider les organisations sportives à gérer les inscriptions à leurs événements. Cette application permet aux organisateurs de gérer les événements et les participants, tout en simplifiant le processus d'inscription.
 
-In the project directory, you can run:
+## Fonctionnalités
 
-### `npm start`
+- **Gestion des événements sportifs** :
+  - Création, modification, suppression des événements.
+  - Gestion des inscriptions aux événements (création et modification pour chaque participant).
+  - Génération et impression d'une liste des inscrits pour chaque événement.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Gestion des utilisateurs et autorisations** :
+  - Authentification des utilisateurs.
+  - Autorisation des utilisateurs basées sur les rôles (organisateur, participant).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technologies Utilisées
 
-### `npm test`
+- **Backend** :
+  - Node.js
+  - Express.js
+  - MongoDB
+  - Mongoose
+  - JWT (JSON Web Token) pour l'authentification
+  - Bcrypt.js pour le hachage des mots de passe
+  - Cors
+  - Dotenv
+  - Jest et Supertest pour les tests
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend** :
+  - React.js (TypeScript)
+  - Redux pour la gestion des états
+  - Axios pour les requêtes HTTP
+  - React Router pour la gestion des routes
 
-### `npm run build`
+## Prérequis
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js
+- npm ou yarn
+- MongoDB
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Backend
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **Cloner le dépôt** :
+   ```sh
+   git clone https://github.com/sanaahamliri/SportEvent.git
+   cd SportEvent/backend
