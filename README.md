@@ -29,7 +29,7 @@ La **Sport Event Manager** est une application interactive conçue pour aider le
   - Jest et Supertest pour les tests
 
 - **Frontend** :
-  - React.js (TypeScript)
+  - React.js
   - Redux pour la gestion des états
   - Axios pour les requêtes HTTP
   - React Router pour la gestion des routes
