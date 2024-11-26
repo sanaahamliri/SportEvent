@@ -13,8 +13,8 @@ const Navbar = () => {
       <h1 className='w-full text-3xl font-bold text-[#00df9a]'>SportEvent</h1>
       <ul className='hidden md:flex'>
         <a href="/" className='p-4 flex justify-center items-center '>Home</a>
-        <a href="/Register" className='p-4 flex justify-center items-center '>Register</a>
-        <a  href="/Login" className='bg-[#00df9a] w-[100px] rounded-md font-medium my-6 mx-auto py-3 text-black flex justify-center items-center' >Login</a>
+        <a href="/Register" className='p-4 flex justify-center items-center '>SignUp</a>
+        <a  href="/Login" className='bg-[#00df9a] hover:bg-[#00df98d5] w-[100px] rounded-md font-medium my-6 mx-auto py-3 text-black flex justify-center items-center' >Login</a>
        
        
       </ul>
@@ -25,7 +25,7 @@ const Navbar = () => {
         <h1 className='w-full text-3xl font-bold text-[#00df9a] m-4'>SportEvent</h1>
         <li className='p-4'>Home</li>
         <li className='p-4'>Register</li>
-        <li className='p-4'>Login</li>
+        <li className='p-4'>SignUp</li>
         
       </ul>
     </div>
