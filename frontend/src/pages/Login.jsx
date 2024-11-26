@@ -1,24 +1,49 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Bg from '../images/sports.jpg'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Navbar from "../components/Navbar";
+import Bg from "../images/sports.jpg";
 
 const Login = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/api/login", formData);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+
+      navigate("/organizer");
+    } catch (error) {
+      console.error("Login error", error);
+    }
+  };
+
   return (
     <div>
-    <Navbar />
-
-      <section className=" min-h-screen flex items-center justify-center">
+      <Navbar />
+      <section className="min-h-screen flex items-center justify-center">
         <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
           <div className="md:w-1/2 px-8 md:px-16">
             <h2 className="font-bold text-2xl text-[#00df9a]">Login</h2>
-            <p className="text-xs mt-4 text-[#00df9a]">If you are already a member, easily log in</p>
+            <p className="text-xs mt-4 text-[#00df9a]">
+              If you are already a member, easily log in
+            </p>
 
-            <form className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <input
                 className="p-2 mt-8 rounded-xl border"
                 type="email"
                 name="email"
                 placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
               />
               <div className="relative">
                 <input
@@ -26,6 +51,8 @@ const Login = () => {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -43,27 +70,10 @@ const Login = () => {
                 Login
               </button>
             </form>
-
-        
-
-            
-
-           
-
-            <div className="mt-3 text-xs flex justify-between items-center text-[#00df9a]">
-              <p>Don't have an account?</p>
-              <a href='/Register' className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300">
-                Register
-              </a>
-            </div>
           </div>
 
           <div className="md:block hidden w-1/2">
-            <img
-              className="rounded-2xl"
-              src={Bg}
-              alt="Login Illustration"
-            />
+            <img className="rounded-2xl" src={Bg} alt="Login Illustration" />
           </div>
         </div>
       </section>

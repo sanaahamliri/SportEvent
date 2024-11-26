@@ -13,9 +13,10 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+const authRoutes = require('./routes/authRoutes');
+const organizerRoutes = require('./routes/organizer');
+app.use('/api', authRoutes);
+app.use('/api', organizerRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
