@@ -15,11 +15,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/login", formData);
-      const { token, user } = response.data;
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        formData
+      );
+      const { token } = response.data;
       localStorage.setItem("token", token);
 
-      navigate("/organizer");
+      navigate("/organizer/Home");
     } catch (error) {
       console.error("Login error", error);
     }

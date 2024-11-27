@@ -13,10 +13,11 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
+//----------------- Routes------------------
 const authRoutes = require('./routes/authRoutes');
-const organizerRoutes = require('./routes/organizer');
+const eventRoutes = require('./routes/event');
 app.use('/api', authRoutes);
-app.use('/api', organizerRoutes);
+app.use('/api', eventRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
