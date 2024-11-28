@@ -18,8 +18,9 @@ const App = () => {
       <Route path="/organizer" element={<Organizer />} />
       <Route path="/organizer/Home" element={<OrHome/>} />
       <Route path="/organizer/Add" element={<Add/>} />
-      <Route path="/organizer/update" element={<Edit />} />
+      <Route path="/organizer/update/:id" element={<Edit />} />
       <Route path="/organizer/List" element={<List />} />
+
 
     </Routes>
   </Router>

@@ -25,6 +25,18 @@ export const getAllEvents = async (token) => {
   return response.data;
 };
 
+export const getEventById = async (id, token) => {
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.get(`${API_URL}/events/${id}`, config);
+  return response.data;
+};
+
+
 export const updateEvent = async (id, eventData, token) => {
   const config = {
     headers: {
@@ -33,8 +45,13 @@ export const updateEvent = async (id, eventData, token) => {
     },
   };
 
-  const response = await axios.put(`${API_URL}/${id}`, eventData, config);
-  return response.data;
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, eventData, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating event", error);
+    throw error; 
+  }
 };
 
 export const deleteEvent = async (id, token) => {
@@ -53,6 +70,7 @@ const eventService = {
   getAllEvents,
   updateEvent,
   deleteEvent,
+  getEventById,
 };
 
 export default eventService;

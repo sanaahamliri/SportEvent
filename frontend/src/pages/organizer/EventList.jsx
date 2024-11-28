@@ -147,6 +147,7 @@ const EventList = () => {
         </div>
       </div>
     </div>
+
   );
 };
 
