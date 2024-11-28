@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import swal from "sweetalert";
 import eventService from "../../services/eventService";
+import EventUpdate from "../organizer/UpdateEvent"; 
 
 const EventList = () => {
-  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -30,10 +30,6 @@ const EventList = () => {
     };
     fetchEvents();
   }, []);
-
-  const handleUpdate = (eventId) => {
-    navigate("/organizer/update/" + eventId);
-  };
 
   const handleDelete = async (eventId) => {
     swal({
@@ -71,7 +67,7 @@ const EventList = () => {
           return (
             <div className="flex space-x-2">
               <button
-                onClick={() => handleUpdate(eventId)}
+                onClick={() => setSelectedEvent(eventId)}
                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Edit
@@ -90,9 +86,6 @@ const EventList = () => {
     [events]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: events });
-
   if (loading) return <p>Loading events...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -104,50 +97,60 @@ const EventList = () => {
             <div className="my-4 ml-4 text-lg font-bold text-gray-800">
               Events Data
             </div>
-            <table
-              className="min-w-full divide-y divide-gray-300"
-              {...getTableProps()}
-            >
+            <table className="min-w-full divide-y divide-gray-300 ">
               <thead className="bg-gray-50">
-                {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map((column) => (
-                      <th
-                        className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase"
-                        {...column.getHeaderProps()}
-                      >
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
+                {columns.map((column) => (
+                  <th
+                    key={column.Header}
+                    className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase"
+                  >
+                    {column.Header}
+                  </th>
                 ))}
               </thead>
-              <tbody
-                {...getTableBodyProps()}
-                className="bg-white divide-y divide-gray-200"
-              >
-                {rows.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                          {...cell.getCellProps()}
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
+              <tbody className="bg-white divide-y divide-gray-200 ">
+                {events.map((event) => (
+                  <tr key={event._id}>
+                    <td className=" p-3">{event._id}</td>
+                    <td className=" p-3">{event.event_name}</td>
+                    <td className=" p-3">{event.date}</td>
+                    <td className=" p-3">{event.location}</td>
+                    <td className=" p-3 flex justify-center items-center gap-3">
+                      <button
+                        onClick={() => setSelectedEvent(event._id)}
+                        className="px-2 py-1 bg-blue-600 text-white rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(event._id)}
+                        className="px-2 py-1 bg-red-600 text-white rounded"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+      {selectedEvent && (
+        <EventUpdate
+          eventId={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          onUpdate={() => {
+            const fetchEvents = async () => {
+              const token = localStorage.getItem("token");
+              const eventsData = await eventService.getAllEvents(token);
+              setEvents(eventsData);
+            };
+            fetchEvents();
+          }}
+        />
+      )}
     </div>
-
   );
 };
 
