@@ -2,34 +2,12 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTable } from "react-table";
 import swal from "sweetalert";
 import eventService from "../../services/eventService";
-import EventUpdate from "../organizer/UpdateEvent"; 
+import EventUpdate from "../organizer/UpdateEvent";
+import useFetchEvents from "../../hooks/useFetchEvents";
 
 const EventList = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("User not authenticated");
-        setLoading(false);
-        return;
-      }
-      try {
-        const eventsData = await eventService.getAllEvents(token);
-        setEvents(eventsData);
-      } catch (error) {
-        setError("Failed to fetch events. Please try again later.");
-        console.error("Error fetching events:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvents();
-  }, []);
+  const { events, loading, error, revalidate } = useFetchEvents();
 
   const handleDelete = async (eventId) => {
     swal({
@@ -43,7 +21,7 @@ const EventList = () => {
         try {
           const token = localStorage.getItem("token");
           await eventService.deleteEvent(eventId, token);
-          setEvents(events.filter((event) => event._id !== eventId));
+          revalidate();
           swal("Event deleted successfully!", { icon: "success" });
         } catch (error) {
           console.error("Error deleting event:", error);
@@ -141,12 +119,7 @@ const EventList = () => {
           eventId={selectedEvent}
           onClose={() => setSelectedEvent(null)}
           onUpdate={() => {
-            const fetchEvents = async () => {
-              const token = localStorage.getItem("token");
-              const eventsData = await eventService.getAllEvents(token);
-              setEvents(eventsData);
-            };
-            fetchEvents();
+            revalidate();
           }}
         />
       )}

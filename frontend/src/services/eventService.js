@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:5000/api/events';
+const API_URL = "http://localhost:5000/api/events";
 
 export const createEvent = async (eventData, token) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -17,7 +17,7 @@ export const createEvent = async (eventData, token) => {
 export const getAllEvents = async (token) => {
   const config = {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -28,7 +28,7 @@ export const getAllEvents = async (token) => {
 export const getEventById = async (id, token) => {
   const config = {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -36,12 +36,11 @@ export const getEventById = async (id, token) => {
   return response.data;
 };
 
-
 export const updateEvent = async (id, eventData, token) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -50,14 +49,14 @@ export const updateEvent = async (id, eventData, token) => {
     return response.data;
   } catch (error) {
     console.error("Error updating event", error);
-    throw error; 
+    throw error;
   }
 };
 
 export const deleteEvent = async (id, token) => {
   const config = {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
