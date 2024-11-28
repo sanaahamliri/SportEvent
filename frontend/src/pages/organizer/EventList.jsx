@@ -1,85 +1,84 @@
-import { React, useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import swal from "sweetalert";
+import eventService from "../../services/eventService";
 
 const EventList = () => {
   const navigate = useNavigate();
-
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fakeEvents = [
-      { id: 1, event_name: "Football Tournament", organizer: "John Doe", date: "2023-10-12", location: "Stadium A" },
-      { id: 2, event_name: "Basketball Championship", organizer: "Jane Smith", date: "2023-11-20", location: "Arena B" },
-      { id: 3, event_name: "Marathon", organizer: "Michael Johnson", date: "2023-09-15", location: "City Park" },
-    ];
-    setEvents(fakeEvents);
+    const fetchEvents = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("User not authenticated");
+        setLoading(false);
+        return;
+      }
+      try {
+        const eventsData = await eventService.getAllEvents(token);
+        setEvents(eventsData);
+      } catch (error) {
+        setError("Failed to fetch events. Please try again later.");
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
   }, []);
 
-  const updateEvent = async (eventId) => {
-    navigate("/update/" + eventId);
+  const handleUpdate = (eventId) => {
+    navigate("/organizer/update/" + eventId);
   };
 
-  const deleteEvent = async (eventId) => {
+  const handleDelete = async (eventId) => {
     swal({
       title: "Are you sure?",
       text: "Once deleted, this action cannot be undone!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
-        setEvents(events.filter(event => event.id !== eventId));
-        swal("Event deleted successfully!", {
-          icon: "success",
-        });
-      } else {
-        swal("Your event is safe!");
+        try {
+          const token = localStorage.getItem("token");
+          await eventService.deleteEvent(eventId, token);
+          setEvents(events.filter((event) => event._id !== eventId));
+          swal("Event deleted successfully!", { icon: "success" });
+        } catch (error) {
+          console.error("Error deleting event:", error);
+          swal("Failed to delete event. Please try again.", { icon: "error" });
+        }
       }
     });
   };
 
   const columns = useMemo(
     () => [
+      { Header: "ID", accessor: "_id" },
+      { Header: "Event Name", accessor: "event_name" },
+      { Header: "Date", accessor: "date" },
+      { Header: "Location", accessor: "location" },
       {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
-        Header: "Event Name",
-        accessor: "event_name",
-      },
-      {
-        Header: "Organizer",
-        accessor: "organizer",
-      },
-      {
-        Header: "Date",
-        accessor: "date",
-      },
-      {
-        Header: "Location",
-        accessor: "location",
-      },
-      {
-        Header: "Action",
-        accessor: "action",
+        Header: "Actions",
+        accessor: "actions",
         Cell: ({ row }) => {
-          const eventId = row.original.id;
+          const eventId = row.original._id;
           return (
-            <div>
+            <div className="flex space-x-2">
               <button
-                type="button"
-                className="mr-2 px-3 py-2.5 bg-blue-400 text-white font-medium text-xs uppercase rounded-full hover:bg-blue-500 hover:shadow-lg active:bg-blue-600 active:shadow-lg"
-                onClick={() => updateEvent(eventId)}
+                onClick={() => handleUpdate(eventId)}
+                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Edit
               </button>
               <button
-                type="button"
-                className="px-3 py-2.5 bg-red-600 text-white font-medium text-xs uppercase rounded-full hover:bg-red-700 hover:shadow-lg active:bg-red-700 active:shadow-lg"
-                onClick={() => deleteEvent(eventId)}
+                onClick={() => handleDelete(eventId)}
+                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Delete
               </button>
@@ -91,75 +90,63 @@ const EventList = () => {
     [events]
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data: events,
-  });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data: events });
+
+  if (loading) return <p>Loading events...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <>
-      <div className="mt-6 flex flex-col">
-        <div className="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <div className="my-4 ml-4 text-medium font-bold text-slate-800 uppercase ">
-                Events Data
-              </div>
-              <table
-                className="min-w-full divide-y divide-gray-300"
-                {...getTableProps()}
-              >
-                <thead className="bg-gray-50">
-                  {
-                    headerGroups.map((headerGroup) => (
-                      <tr {...headerGroup.getHeaderGroupProps()}>
-                        {
-                          headerGroup.headers.map((column) => (
-                            <th
-                              className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase "
-                              {...column.getHeaderProps()}
-                            >
-                              {column.render("Header")}
-                            </th>
-                          ))
-                        }
-                      </tr>
-                    ))
-                  }
-                </thead>
-                <tbody
-                  {...getTableBodyProps()}
-                  className="bg-white divide-y divide-gray-200"
-                >
-                  {
-                    rows.map((row, i) => {
-                      prepareRow(row);
-                      return (
-                        <tr
-                          {...row.getRowProps()}
-                          className="divide-x divide-gray-100"
-                        >
-                          {row.cells.map((cell) => {
-                            return (
-                              <td
-                                {...cell.getCellProps()}
-                                className="px-6 py-4 whitespace-nowrap"
-                              >
-                                {cell.render("Cell")}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })
-                  }
-                </tbody>
-              </table>
+    <div className="mt-6 flex flex-col">
+      <div className="-my-2 overflow-x-auto">
+        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div className="shadow border-b border-gray-200 sm:rounded-lg">
+            <div className="my-4 ml-4 text-lg font-bold text-gray-800">
+              Events Data
             </div>
+            <table
+              className="min-w-full divide-y divide-gray-300"
+              {...getTableProps()}
+            >
+              <thead className="bg-gray-50">
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase"
+                        {...column.getHeaderProps()}
+                      >
+                        {column.render("Header")}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody
+                {...getTableBodyProps()}
+                className="bg-white divide-y divide-gray-200"
+              >
+                {rows.map((row) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
