@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Table from "./EventList";
-import Sidebar from "./Sidebar";
-import EventFormModal from "../organizer/CreateEvent";
+import ParticipantList from "../Participants/ParticipantsList";
+import Sidebar from "../Sidebar";
+import ParticipantFormModal from "../Participants/CreateParticipant";
 
 const Organizer = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -29,10 +29,10 @@ const Organizer = () => {
               <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
                 <div className="rounded-md shadow">
                   <button
-                    onClick={() => navigate("/organizer/Partcipants")}
+                    onClick={() => navigate("/organizer/Home")}
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-500 md:py-4 md:text-lg md:px-10"
                   >
-                    Add Participants
+                    Add Event
                   </button>
                 </div>
                 <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
@@ -40,18 +40,18 @@ const Organizer = () => {
                     onClick={() => setModalOpen(true)}
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-gray-800 bg-gray-200 hover:bg-gray-300 md:py-4 md:text-lg md:px-10"
                   >
-                    Add Event
+                    Add Participant
                   </button>
                 </div>
               </div>
             </div>
             <div>
-              <Table />
+              <ParticipantList />
             </div>
           </main>
         </div>
       </div>
-      <EventFormModal
+      <ParticipantFormModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
       />

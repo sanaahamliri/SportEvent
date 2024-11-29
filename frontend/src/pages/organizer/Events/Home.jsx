@@ -29,10 +29,10 @@ const Organizer = () => {
               <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
                 <div className="rounded-md shadow">
                   <button
-                    onClick={() => navigate("/organizer/Partcipants")}
+                    onClick={() => navigate("/events")}
                     className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-500 md:py-4 md:text-lg md:px-10"
                   >
-                    Add Participants
+                    View Events
                   </button>
                 </div>
                 <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">

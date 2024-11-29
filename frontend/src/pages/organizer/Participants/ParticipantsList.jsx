@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import swal from "sweetalert";
-import eventService from "../../services/eventService";
-import EventUpdate from "../organizer/UpdateEvent";
-import useFetchEvents from "../../hooks/useFetchEvents";
+import participantService from "../../../services/ParticipantService";
+import ParticipantUpdate from "./UpdateParticipants";
+import useFetchParticipants from "../../../hooks/useFetchParticipants";
 
-const EventList = () => {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const { events, loading, error, revalidate } = useFetchEvents();
+const ParticipantList = () => {
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const { participants, loading, error, revalidate } = useFetchParticipants();
 
-  const handleDelete = async (eventId) => {
+  const handleDelete = async (participantId) => {
     swal({
       title: "Are you sure?",
       text: "Once deleted, this action cannot be undone!",
@@ -19,12 +19,12 @@ const EventList = () => {
       if (willDelete) {
         try {
           const token = localStorage.getItem("token");
-          await eventService.deleteEvent(eventId, token);
+          await participantService.deleteParticipant(participantId, token);
           revalidate();
-          swal("Event deleted successfully!", { icon: "success" });
+          swal("Participant deleted successfully!", { icon: "success" });
         } catch (error) {
-          console.error("Error deleting event:", error);
-          swal("Failed to delete event. Please try again.", { icon: "error" });
+          console.error("Error deleting participant:", error);
+          swal("Failed to delete participant. Please try again.", { icon: "error" });
         }
       }
     });
@@ -32,16 +32,16 @@ const EventList = () => {
 
   const columns = [
     { Header: "ID", accessor: "_id" },
-    { Header: "Event Name", accessor: "event_name" },
-    { Header: "Date", accessor: "date" },
-    { Header: "Location", accessor: "location" },
+    { Header: "Name", accessor: "name" },
+    { Header: "Email", accessor: "email" },
+    { Header: "Event", accessor: "event.event_name" },
     {
       Header: "Actions",
       accessor: "actions",
     },
   ];
 
-  if (loading) return <p>Loading events...</p>;
+  if (loading) return <p>Loading participants...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
@@ -50,7 +50,7 @@ const EventList = () => {
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow border-b border-gray-200 sm:rounded-lg">
             <div className="my-4 ml-4 text-lg font-bold text-gray-800">
-              Events Data
+              Participants Data
             </div>
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
@@ -66,21 +66,21 @@ const EventList = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {events.map((event) => (
-                  <tr key={event._id}>
-                    <td className="p-3">{event._id}</td>
-                    <td className="p-3">{event.event_name}</td>
-                    <td className="p-3">{event.date}</td>
-                    <td className="p-3">{event.location}</td>
+                {participants.map((participant) => (
+                  <tr key={participant._id}>
+                    <td className="p-3">{participant._id}</td>
+                    <td className="p-3">{participant.name}</td>
+                    <td className="p-3">{participant.email}</td>
+                    <td className="p-3">{participant.event.event_name}</td>
                     <td className="p-3 flex justify-center items-center gap-3">
                       <button
-                        onClick={() => setSelectedEvent(event._id)}
+                        onClick={() => setSelectedParticipant(participant._id)}
                         className="px-2 py-1 bg-blue-600 text-white rounded"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(event._id)}
+                        onClick={() => handleDelete(participant._id)}
                         className="px-2 py-1 bg-red-600 text-white rounded"
                       >
                         Delete
@@ -93,10 +93,10 @@ const EventList = () => {
           </div>
         </div>
       </div>
-      {selectedEvent && (
-        <EventUpdate
-          eventId={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
+      {selectedParticipant && (
+        <ParticipantUpdate
+          participantId={selectedParticipant}
+          onClose={() => setSelectedParticipant(null)}
           onUpdate={() => {
             revalidate();
           }}
@@ -106,4 +106,4 @@ const EventList = () => {
   );
 };
 
-export default EventList;
+export default ParticipantList;

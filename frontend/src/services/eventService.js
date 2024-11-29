@@ -32,7 +32,7 @@ export const getEventById = async (id, token) => {
     },
   };
 
-  const response = await axios.get(`${API_URL}/events/${id}`, config);
+  const response = await axios.get(`${API_URL}/${id}`, config);
   return response.data;
 };
 

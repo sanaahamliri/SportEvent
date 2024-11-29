@@ -7,6 +7,8 @@ import Add from './pages/organizer/CreateEvent';
 import Edit from "./pages/organizer/UpdateEvent";
 import List from "./pages/organizer/EventList";
 import OrHome from "./pages/organizer/Home";
+import ParticipantsHome from "./pages/organizer/Participants/Home";
+
 
 
 const App = () => {
@@ -20,6 +22,8 @@ const App = () => {
       <Route path="/organizer/Add" element={<Add/>} />
       <Route path="/organizer/update/:id" element={<Edit />} />
       <Route path="/organizer/List" element={<List />} />
+      <Route path="/organizer/Partcipants" element={<ParticipantsHome />} />
+
 
 
     </Routes>

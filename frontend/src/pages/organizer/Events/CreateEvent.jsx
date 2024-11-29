@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createEvent } from "../../services/eventService";
 import useFetchEvents from "../../hooks/useFetchEvents";
+import { useNavigate } from "react-router-dom";
 
 const EventFormModal = ({ isOpen, onClose }) => {
   const initialFormState = {
@@ -10,8 +11,7 @@ const EventFormModal = ({ isOpen, onClose }) => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const { revalidate } = useFetchEvents();
-
+  const { revalidate , setEvents } = useFetchEvents();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -27,11 +27,14 @@ const EventFormModal = ({ isOpen, onClose }) => {
 
     try {
       const newEvent = await createEvent(formData, token);
+      console.log(newEvent)
+      setEvents((prev) => [newEvent , ...prev])
       console.log("New Event Created:", newEvent);
 
-      revalidate(); 
+   
       setFormData(initialFormState);
       onClose();
+      // revalidate();
     } catch (error) {
       console.error("Error creating event:", error);
       alert("Failed to create event.");

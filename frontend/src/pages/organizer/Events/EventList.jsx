@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useTable } from "react-table";
 import swal from "sweetalert";
 import eventService from "../../services/eventService";
 import EventUpdate from "../organizer/UpdateEvent";
@@ -30,16 +31,38 @@ const EventList = () => {
     });
   };
 
-  const columns = [
-    { Header: "ID", accessor: "_id" },
-    { Header: "Event Name", accessor: "event_name" },
-    { Header: "Date", accessor: "date" },
-    { Header: "Location", accessor: "location" },
-    {
-      Header: "Actions",
-      accessor: "actions",
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      { Header: "ID", accessor: "_id" },
+      { Header: "Event Name", accessor: "event_name" },
+      { Header: "Date", accessor: "date" },
+      { Header: "Location", accessor: "location" },
+      {
+        Header: "Actions",
+        accessor: "actions",
+        Cell: ({ row }) => {
+          const eventId = row.original._id;
+          return (
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setSelectedEvent(eventId)}
+                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(eventId)}
+                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          );
+        },
+      },
+    ],
+    [events]
+  );
 
   if (loading) return <p>Loading events...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -52,27 +75,25 @@ const EventList = () => {
             <div className="my-4 ml-4 text-lg font-bold text-gray-800">
               Events Data
             </div>
-            <table className="min-w-full divide-y divide-gray-300">
+            <table className="min-w-full divide-y divide-gray-300 ">
               <thead className="bg-gray-50">
-                <tr>
-                  {columns.map((column) => (
-                    <th
-                      key={column.Header}
-                      className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase"
-                    >
-                      {column.Header}
-                    </th>
-                  ))}
-                </tr>
+                {columns.map((column) => (
+                  <th
+                    key={column.Header}
+                    className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase"
+                  >
+                    {column.Header}
+                  </th>
+                ))}
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 ">
                 {events.map((event) => (
                   <tr key={event._id}>
-                    <td className="p-3">{event._id}</td>
-                    <td className="p-3">{event.event_name}</td>
-                    <td className="p-3">{event.date}</td>
-                    <td className="p-3">{event.location}</td>
-                    <td className="p-3 flex justify-center items-center gap-3">
+                    <td className=" p-3">{event._id}</td>
+                    <td className=" p-3">{event.event_name}</td>
+                    <td className=" p-3">{event.date}</td>
+                    <td className=" p-3">{event.location}</td>
+                    <td className=" p-3 flex justify-center items-center gap-3">
                       <button
                         onClick={() => setSelectedEvent(event._id)}
                         className="px-2 py-1 bg-blue-600 text-white rounded"

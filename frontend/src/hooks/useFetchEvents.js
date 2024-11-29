@@ -41,6 +41,7 @@ export default function useFetchEvents() {
     events,
     loading,
     error,
+    setEvents,
     revalidate,
   };
 }
