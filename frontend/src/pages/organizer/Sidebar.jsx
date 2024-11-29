@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 const Sidebar = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setIsDarkMode(prefersDark);
-  }, []);
+  
 
   return (
-    <div className={`flex min-h-screen ${isDarkMode ? "dark" : ""}`}>
+    <div className={`flex min-h-screen `}>
       <aside className="bg-white dark:bg-gray-800 w-64 min-h-screen flex flex-col">
         <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-2xl font-bold text-indigo-800 dark:text-white">
