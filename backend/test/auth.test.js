@@ -1,39 +1,50 @@
-const { loginUser } = require('../controllers/authController');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-jest.mock('../models/User.js')
+const { loginUser } = require('../controllers/authController');
 
-describe('Auth', () => {
-    it('should respond with user data if login is successful', async () => {
-        // Mock request and response
-        const req = {
-          body: {
-            email: 'test@gmail.com',
-            password: 'test',
-          },
-        };
-    
-        const res = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-    
-        // Mock User.findOne to return a user
-        const mockUser = { _id: '123', email: req.body.email, password: 'hashed_password' };
-        User.findOne = jest.fn().mockResolvedValue(mockUser);
-    
-        // Mock bcrypt.compare directly as true (bypassing actual implementation)
-        const bcrypt = require('bcryptjs');
-        jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
-    
-        // Call the controller
-        await loginUser(req, res);
-    
-        // Assertions
-        expect(User.findOne).toHaveBeenCalledWith({ email: req.body.email });
-        expect(bcrypt.compare).toHaveBeenCalledWith(req.body.password, mockUser.password);
-        expect(res.json).toHaveBeenCalledWith({
-          token: expect.any(String), // Optional: Remove if not needed
-          user: { id: mockUser._id },
-        });
-      });
-})
+jest.mock('bcryptjs');
+jest.mock('jsonwebtoken');
+jest.mock('../models/User');
+
+describe('loginUser', () => {
+  let req;
+  let res;
+
+  beforeEach(() => {
+    req = { body: { email: 'sanaa@gmail.com', password: 'password' } };
+    res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+  });
+
+  it('should return a token and user id for valid credentials', async () => {
+    User.findOne.mockResolvedValue({ _id: 'user_id', email: 'sanaa@gmail.com', password: 'hashedpassword' });
+    bcrypt.compare.mockResolvedValue(true);
+    jwt.sign.mockReturnValue('mockedToken');
+
+    await loginUser(req, res);
+
+    expect(User.findOne).toHaveBeenCalledWith({ email: 'sanaa@gmail.com' });
+    expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashedpassword');
+    expect(jwt.sign).toHaveBeenCalledWith({ id: 'user_id' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    expect(res.json).toHaveBeenCalledWith({ token: 'mockedToken', user: { id: 'user_id' } });
+  });
+
+  it('should return 400 if user is not found', async () => {
+    User.findOne.mockResolvedValue(null);
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+  });
+
+  it('should return 400 for invalid credentials', async () => {
+    User.findOne.mockResolvedValue({ _id: 'user_id', email: 'sanaa@gmail.com', password: 'hashedpassword' });
+    bcrypt.compare.mockResolvedValue(false);
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid credentials' });
+  });
+});
