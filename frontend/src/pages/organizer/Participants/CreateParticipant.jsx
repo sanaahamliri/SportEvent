@@ -16,11 +16,16 @@ const ParticipantFormModal = ({ isOpen, onClose }) => {
     const fetchEvents = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/api/events", {
+        if (!token) {
+          throw new Error("No token found");
+        }
+        const config = {
           headers: {
-            "x-auth-token": token,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-        });
+        };
+        const response = await axios.get("http://localhost:5000/api/events", config);
         console.log("Events data:", response.data);
         setEvents(response.data);
       } catch (error) {
