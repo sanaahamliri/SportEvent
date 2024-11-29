@@ -4,6 +4,7 @@ import eventService from "../../services/eventService";
 import EventUpdate from "../organizer/UpdateEvent";
 import useFetchEvents from "../../hooks/useFetchEvents";
 import PrintParticipantsModal from "../organizer/Participants/PrintParticipants";
+import withAuth from "../../hooks/withAuth";
 
 const EventList = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -157,4 +158,4 @@ const EventList = () => {
   );
 };
 
-export default EventList;
+export default withAuth(EventList);

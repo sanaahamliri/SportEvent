@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { createEvent } from "../../services/eventService";
 import useFetchEvents from "../../hooks/useFetchEvents";
 import { useNavigate } from "react-router-dom";
+import withAuth from "../../hooks/withAuth";
 
 const EventFormModal = ({ isOpen, onClose }) => {
   const initialFormState = {
@@ -122,4 +123,4 @@ const EventFormModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default EventFormModal;
+export default withAuth(EventFormModal);

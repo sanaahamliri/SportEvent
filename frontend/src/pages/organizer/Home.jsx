@@ -4,6 +4,7 @@ import axios from "axios";
 import Table from "./EventList";
 import Sidebar from "./Sidebar";
 import EventFormModal from "../organizer/CreateEvent";
+import withAuth from "../../hooks/withAuth";
 
 const Organizer = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -59,4 +60,4 @@ const Organizer = () => {
   );
 };
 
-export default Organizer;
+export default withAuth(Organizer);

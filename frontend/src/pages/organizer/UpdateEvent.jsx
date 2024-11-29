@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { updateEvent, getEventById } from "../../services/eventService";  
+import withAuth from "../../hooks/withAuth";
 
 const EventUpdate = ({ eventId, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -119,4 +120,4 @@ const EventUpdate = ({ eventId, onClose, onUpdate }) => {
   );
 };
 
-export default EventUpdate;
+export default withAuth(EventUpdate);

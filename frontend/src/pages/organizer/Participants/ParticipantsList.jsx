@@ -3,6 +3,7 @@ import swal from "sweetalert";
 import participantService from "../../../services/ParticipantService";
 import ParticipantUpdate from "./UpdateParticipants";
 import useFetchParticipants from "../../../hooks/useFetchParticipants";
+import withAuth from "../../../hooks/withAuth";
 
 const ParticipantList = () => {
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -106,4 +107,4 @@ const ParticipantList = () => {
   );
 };
 
-export default ParticipantList;
+export default withAuth(ParticipantList);

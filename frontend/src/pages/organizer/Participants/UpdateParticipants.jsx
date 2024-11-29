@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import participantService from "../../../services/ParticipantService";
+import withAuth from "../../../hooks/withAuth";
 
 const ParticipantUpdate = ({ participantId, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -147,4 +148,4 @@ const ParticipantUpdate = ({ participantId, onClose, onUpdate }) => {
   );
 };
 
-export default ParticipantUpdate;
+export default withAuth(ParticipantUpdate);

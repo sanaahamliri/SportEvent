@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import withAuth from "../../../hooks/withAuth";
 
 const PrintParticipantsModal = ({ isOpen, onClose, eventId, eventName }) => {
   const [participants, setParticipants] = useState([]);
@@ -69,4 +70,4 @@ const PrintParticipantsModal = ({ isOpen, onClose, eventId, eventName }) => {
   );
 };
 
-export default PrintParticipantsModal;
+export default withAuth(PrintParticipantsModal);

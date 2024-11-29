@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import participantService from "../../../services/ParticipantService";
+import withAuth from "../../../hooks/withAuth";
 
 const ParticipantFormModal = ({ isOpen, onClose }) => {
   const initialFormState = {
@@ -146,4 +147,4 @@ const ParticipantFormModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default ParticipantFormModal;
+export default withAuth(ParticipantFormModal);
