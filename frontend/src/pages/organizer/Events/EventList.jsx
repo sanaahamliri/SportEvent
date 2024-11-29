@@ -31,6 +31,10 @@ const EventList = () => {
     });
   };
 
+  const handlePrintParticipants = (eventId) => {
+    window.open(`/print-participants/${eventId}`, "_blank");
+  };
+
   const columns = useMemo(
     () => [
       { Header: "ID", accessor: "_id" },
@@ -56,6 +60,12 @@ const EventList = () => {
               >
                 Delete
               </button>
+              <button
+                onClick={() => handlePrintParticipants(eventId)}
+                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Print Participants
+              </button>
             </div>
           );
         },
@@ -75,7 +85,7 @@ const EventList = () => {
             <div className="my-4 ml-4 text-lg font-bold text-gray-800">
               Events Data
             </div>
-            <table className="min-w-full divide-y divide-gray-300 ">
+            <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 {columns.map((column) => (
                   <th
@@ -86,7 +96,7 @@ const EventList = () => {
                   </th>
                 ))}
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 ">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {events.map((event) => (
                   <tr key={event._id}>
                     <td className=" p-3">{event._id}</td>
@@ -105,6 +115,12 @@ const EventList = () => {
                         className="px-2 py-1 bg-red-600 text-white rounded"
                       >
                         Delete
+                      </button>
+                      <button
+                        onClick={() => handlePrintParticipants(event._id)}
+                        className="px-2 py-1 bg-green-600 text-white rounded"
+                      >
+                        Print Participants
                       </button>
                     </td>
                   </tr>

@@ -31,9 +31,14 @@ const ParticipantUpdate = ({ participantId, onClose, onUpdate }) => {
     const fetchEvents = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found, redirecting to login");
+          return;
+        }
+
         const response = await axios.get("http://localhost:5000/api/events", {
           headers: {
-            "x-auth-token": token,
+            "Authorization": `Bearer ${token}`,
           },
         });
         setEvents(response.data);
