@@ -3,7 +3,7 @@ import axios from "axios";
 import participantService from "../../../services/ParticipantService";
 import withAuth from "../../../hooks/withAuth";
 
-const ParticipantFormModal = ({ isOpen, onClose }) => {
+const ParticipantFormModal = ({ isOpen, onClose, onUpdate }) => {
   const initialFormState = {
     name: "",
     email: "",
@@ -26,7 +26,10 @@ const ParticipantFormModal = ({ isOpen, onClose }) => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.get("http://localhost:5000/api/events", config);
+        const response = await axios.get(
+          "http://localhost:5000/api/events",
+          config
+        );
         console.log("Events data:", response.data);
         setEvents(response.data);
       } catch (error) {
@@ -50,9 +53,13 @@ const ParticipantFormModal = ({ isOpen, onClose }) => {
     }
 
     try {
-      const newParticipant = await participantService.createParticipant(formData, token);
+      const newParticipant = await participantService.createParticipant(
+        formData,
+        token
+      );
       console.log("New Participant Created:", newParticipant);
       setFormData(initialFormState);
+      onUpdate();
       onClose();
     } catch (error) {
       console.error("Error creating participant:", error);
@@ -119,7 +126,7 @@ const ParticipantFormModal = ({ isOpen, onClose }) => {
               required
             >
               <option value="">Select Event</option>
-              {events.map(event => (
+              {events.map((event) => (
                 <option key={event._id} value={event._id}>
                   {event.event_name}
                 </option>

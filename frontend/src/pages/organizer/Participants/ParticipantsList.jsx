@@ -35,7 +35,6 @@ const ParticipantList = () => {
     { Header: "ID", accessor: "_id" },
     { Header: "Name", accessor: "name" },
     { Header: "Email", accessor: "email" },
-    { Header: "Event", accessor: "event.event_name" },
     {
       Header: "Actions",
       accessor: "actions",
@@ -72,7 +71,6 @@ const ParticipantList = () => {
                     <td className="p-3">{participant._id}</td>
                     <td className="p-3">{participant.name}</td>
                     <td className="p-3">{participant.email}</td>
-                    <td className="p-3">{participant.event.event_name}</td>
                     <td className="p-3 flex justify-center items-center gap-3">
                       <button
                         onClick={() => setSelectedParticipant(participant._id)}

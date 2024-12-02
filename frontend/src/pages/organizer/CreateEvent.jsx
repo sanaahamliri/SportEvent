@@ -4,7 +4,7 @@ import useFetchEvents from "../../hooks/useFetchEvents";
 import { useNavigate } from "react-router-dom";
 import withAuth from "../../hooks/withAuth";
 
-const EventFormModal = ({ isOpen, onClose }) => {
+const EventFormModal = ({ isOpen, onClose, onUpdate }) => {
   const initialFormState = {
     event_name: "",
     date: "",
@@ -12,7 +12,7 @@ const EventFormModal = ({ isOpen, onClose }) => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const { revalidate , setEvents } = useFetchEvents();
+  const { revalidate, setEvents } = useFetchEvents();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -28,14 +28,13 @@ const EventFormModal = ({ isOpen, onClose }) => {
 
     try {
       const newEvent = await createEvent(formData, token);
-      console.log(newEvent)
-      setEvents((prev) => [newEvent , ...prev])
+      console.log(newEvent);
+      setEvents((prev) => [newEvent, ...prev]);
       console.log("New Event Created:", newEvent);
 
-   
       setFormData(initialFormState);
       onClose();
-      // revalidate();
+      onUpdate();
     } catch (error) {
       console.error("Error creating event:", error);
       alert("Failed to create event.");
